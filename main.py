@@ -94,7 +94,7 @@ class WebsiteStreamer:
                 '-f', 'gdigrab' if os.name == "nt" else "x11grab",
                 '-framerate', '30',
                 # '-i', 'desktop',
-                '-video_size','1920x1080',
+                '-video_size','1280x1024',
                 # '-i', ':0.0+0,0',
                 '-i',os.getenv('DISPLAY_ID',':99'),
                 '-f', 'lavfi', 
