@@ -9,6 +9,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.firefox import GeckoDriverManager
 import base64
 import platform
 
@@ -68,7 +69,7 @@ class WebsiteStreamer:
                 firefox_options.add_argument('--height=1080')
                 firefox_options.add_argument('--display=:99')  # Virtual display
                 
-                self.browser_driver = webdriver.Firefox(options=firefox_options)
+                self.browser_driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()),options=firefox_options)
             
             print(f"Loading URL: {url}")
             self.browser_driver.get(url)
@@ -182,7 +183,7 @@ def get_website_preview(url):
                 firefox_options.add_argument('--headless')
                 firefox_options.add_argument('--width=1920')
                 firefox_options.add_argument('--height=1080')
-                preview_driver = webdriver.Firefox(options=firefox_options)
+                preview_driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()),options=firefox_options)
         
         preview_driver.get(url)
         time.sleep(3)  # Wait for page load
