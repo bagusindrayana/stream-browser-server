@@ -93,7 +93,7 @@ class WebsiteStreamer:
                 'ffmpeg',
                 '-f', 'gdigrab' if os.name == "nt" else "x11grab",
                 '-framerate', '30',
-                '-i', 'default',
+                '-i', 'desktop',
                 '-f', 'lavfi', 
                 '-i', 'anullsrc=channel_layout=stereo:sample_rate=44100',
                 '-c:v', 'libx264',
