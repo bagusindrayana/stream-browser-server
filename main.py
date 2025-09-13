@@ -8,6 +8,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.firefox.service import Service as FirefoxService
+from webdriver_manager.chrome import ChromeDriverManager
 import base64
 import platform
 
@@ -57,7 +58,7 @@ class WebsiteStreamer:
             chrome_options.add_argument('--disable-blink-features=AutomationControlled')
             
             try:
-                self.browser_driver = webdriver.Chrome(options=chrome_options)
+                self.browser_driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_options)
             except Exception as e:
                 print(f"Chrome failed, trying Firefox: {e}")
                 # Fallback ke Firefox - JUGA HEADLESS
@@ -173,7 +174,7 @@ def get_website_preview(url):
             chrome_options.add_argument("--disable-gpu")
             
             try:
-                preview_driver = webdriver.Chrome(options=chrome_options)
+                preview_driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_options)
             except Exception as e:
                 print(f"Chrome preview failed: {e}")
                 # Fallback ke Firefox
