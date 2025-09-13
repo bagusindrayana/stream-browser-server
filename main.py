@@ -96,7 +96,7 @@ class WebsiteStreamer:
                 # '-i', 'desktop',
                 '-video_size','1920x1080',
                 # '-i', ':0.0+0,0',
-                '-i',f'{os.getenv('DISPLAY_ID',':99')}',
+                '-i',os.getenv('DISPLAY_ID',':99'),
                 '-f', 'lavfi', 
                 '-i', 'anullsrc=channel_layout=stereo:sample_rate=44100',
                 '-c:v', 'libx264',
