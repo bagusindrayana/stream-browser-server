@@ -348,11 +348,11 @@ if __name__ == '__main__':
         print("⚠️  Warning: FFmpeg not found. Streaming will not work.")
         print("   Download FFmpeg from: https://ffmpeg.org/download.html")
     
-    try:
-        webdriver.Chrome(options=Options())
-        print("✅ Chrome WebDriver available")
-    except:
-        print("⚠️  Warning: Chrome WebDriver not found")
+    # try:
+    #     webdriver.Chrome(options=Options())
+    #     print("✅ Chrome WebDriver available")
+    # except:
+    #     print("⚠️  Warning: Chrome WebDriver not found")
     
     try:
         app.run(host='0.0.0.0', port=5000, debug=True)
