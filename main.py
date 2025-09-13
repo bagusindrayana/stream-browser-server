@@ -12,6 +12,9 @@ from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 import base64
 import platform
+from dotenv import load_dotenv
+
+load_dotenv()  # take environment variables
 
 app = Flask(__name__)
 
@@ -22,6 +25,8 @@ preview_driver = None
 current_url = ""
 stream_key = ""
 is_windows = platform.system() == "Windows"
+
+chromerdriver_path = os.getenv('CHROMEDRIVER_PATH',ChromeDriverManager().install())
 
 class WebsiteStreamer:
     def __init__(self):
@@ -59,7 +64,7 @@ class WebsiteStreamer:
             chrome_options.add_argument('--disable-blink-features=AutomationControlled')
             
             try:
-                self.browser_driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_options)
+                self.browser_driver = webdriver.Chrome(service=Service(chromerdriver_path),options=chrome_options)
             except Exception as e:
                 print(f"Chrome failed, trying Firefox: {e}")
                 # Fallback ke Firefox - JUGA HEADLESS
@@ -175,7 +180,7 @@ def get_website_preview(url):
             chrome_options.add_argument("--disable-gpu")
             
             try:
-                preview_driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_options)
+                preview_driver = webdriver.Chrome(service=Service(chromerdriver_path),options=chrome_options)
             except Exception as e:
                 print(f"Chrome preview failed: {e}")
                 # Fallback ke Firefox

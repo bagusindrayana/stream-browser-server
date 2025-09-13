@@ -2,3 +2,4 @@ flask
 selenium
 chromedriver_autoinstaller
 webdriver-manager
+python-dotenv
