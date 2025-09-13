@@ -49,7 +49,7 @@ class WebsiteStreamer:
             chrome_options.add_argument('--disable-features=TranslateUI')
             chrome_options.add_argument('--disable-ipc-flooding-protection')
             chrome_options.add_argument('--window-size=1920,1080')
-            chrome_options.add_argument('--window-position=-2000,-2000')  # Off-screen
+            # chrome_options.add_argument('--window-position=-2000,-2000')  # Off-screen
             chrome_options.add_argument('--disable-web-security')
             chrome_options.add_argument('--allow-running-insecure-content')
             chrome_options.add_argument('--force-device-scale-factor=1')
@@ -93,7 +93,9 @@ class WebsiteStreamer:
                 'ffmpeg',
                 '-f', 'gdigrab' if os.name == "nt" else "x11grab",
                 '-framerate', '30',
-                '-i', 'desktop',
+                # '-i', 'desktop',
+                '-video_size','1920x1080',
+                '-i', ':0.0+0,0',
                 '-f', 'lavfi', 
                 '-i', 'anullsrc=channel_layout=stereo:sample_rate=44100',
                 '-c:v', 'libx264',
