@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Stream Controller</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a6f);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-left: 4px solid #ff6b6b;
+            padding-left: 15px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #ff6b6b;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a6f);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #ff9a9e, #fecfef);
+        }
+
+        .preview-container {
+            border: 2px dashed #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .preview-container.has-preview {
+            border-color: #ff6b6b;
+            background: white;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 600px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ccc;
+            margin-right: 10px;
+        }
+
+        .status-indicator.streaming {
+            background: #ff6b6b;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .logs {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #ff6b6b;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success {
+            background: #c6f6d5;
+            color: #2f855a;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎥 Website Stream Controller</h1>
+            <p>Preview websites and stream them to YouTube live</p>
+        </div>
+
+        <div class="content">
+            <div class="error" id="error-message"></div>
+            <div class="success" id="success-message"></div>
+
+            <div class="status">
+                <div style="display: flex; align-items: center;">
+                    <div class="status-indicator" id="status-indicator"></div>
+                    <span id="status-text">Ready to stream</span>
+                </div>
+                <button class="btn" onclick="refreshStatus()">Refresh Status</button>
+            </div>
+
+            <div class="section">
+                <h2>1. Website Preview</h2>
+                <div class="input-group">
+                    <label for="website-url">Website URL:</label>
+                    <input type="text" id="website-url" placeholder="https://example.com" value="">
+                </div>
+                <button class="btn" onclick="previewWebsite()">Generate Preview</button>
+
+                <div class="loading" id="preview-loading">
+                    <div class="spinner"></div>
+                    <p>Generating preview...</p>
+                </div>
+
+                <div class="preview-container" id="preview-container">
+                    <p>Enter a website URL and click "Generate Preview" to see how it looks</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>2. Stream Configuration</h2>
+                <div class="input-group">
+                    <label for="stream-key">YouTube Stream Key:</label>
+                    <input type="password" id="stream-key" placeholder="Your YouTube Live stream key">
+                </div>
+                <p style="color: #666; font-size: 14px; margin-bottom: 20px;">
+                    Get your stream key from YouTube Studio → Go live → Stream
+                </p>
+
+                <button class="btn btn-success" onclick="startStream()" id="start-btn">Start Streaming</button>
+                <button class="btn btn-danger" onclick="stopStream()" id="stop-btn" disabled>Stop Streaming</button>
+            </div>
+
+            <div class="section">
+                <h2>3. Stream Logs</h2>
+                <button class="btn" onclick="refreshLogs()">Refresh Logs</button>
+                <div class="logs" id="logs">No logs available</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let streamingStatus = false;
+
+        function showError(message) {
+            const errorEl = document.getElementById('error-message');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+            setTimeout(() => errorEl.style.display = 'none', 5000);
+        }
+
+        function showSuccess(message) {
+            const successEl = document.getElementById('success-message');
+            successEl.textContent = message;
+            successEl.style.display = 'block';
+            setTimeout(() => successEl.style.display = 'none', 5000);
+        }
+
+        async function previewWebsite() {
+            const url = document.getElementById('website-url').value.trim();
+            if (!url) {
+                showError('Please enter a website URL');
+                return;
+            }
+
+            const loadingEl = document.getElementById('preview-loading');
+            const previewContainer = document.getElementById('preview-container');
+            
+            loadingEl.style.display = 'block';
+            previewContainer.innerHTML = '';
+
+            try {
+                const response = await fetch('/preview', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url: url })
+                });
+
+                const result = await response.json();
+                loadingEl.style.display = 'none';
+
+                if (result.success) {
+                    previewContainer.innerHTML = `<img src="${result.screenshot}" alt="Website Preview" class="preview-image">`;
+                    previewContainer.classList.add('has-preview');
+                    showSuccess('Preview generated successfully!');
+                } else {
+                    previewContainer.innerHTML = `<p style="color: #ff6b6b;">Failed to generate preview: ${result.error}</p>`;
+                    showError(result.error);
+                }
+            } catch (error) {
+                loadingEl.style.display = 'none';
+                previewContainer.innerHTML = `<p style="color: #ff6b6b;">Network error: ${error.message}</p>`;
+                showError('Network error occurred');
+            }
+        }
+
+        async function startStream() {
+            const streamKey = document.getElementById('stream-key').value.trim();
+            if (!streamKey) {
+                showError('Please enter your YouTube stream key');
+                return;
+            }
+
+            const url = document.getElementById('website-url').value.trim();
+            if (!url) {
+                showError('Please generate a website preview first');
+                return;
+            }
+
+            try {
+                const response = await fetch('/start_stream', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ stream_key: streamKey })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showSuccess('Streaming started successfully!');
+                    updateStreamingStatus(true);
+                } else {
+                    showError(result.error);
+                }
+            } catch (error) {
+                showError('Failed to start stream');
+            }
+        }
+
+        async function stopStream() {
+            try {
+                const response = await fetch('/stop_stream', {
+                    method: 'POST'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showSuccess('Streaming stopped');
+                    updateStreamingStatus(false);
+                } else {
+                    showError(result.error);
+                }
+            } catch (error) {
+                showError('Failed to stop stream');
+            }
+        }
+
+        async function refreshStatus() {
+            try {
+                const response = await fetch('/status');
+                const status = await response.json();
+                
+                updateStreamingStatus(status.streaming);
+                if (status.current_url) {
+                    document.getElementById('website-url').value = status.current_url;
+                }
+            } catch (error) {
+                showError('Failed to refresh status');
+            }
+        }
+
+        async function refreshLogs() {
+            try {
+                const response = await fetch('/logs');
+                const result = await response.json();
+                document.getElementById('logs').textContent = result.logs;
+            } catch (error) {
+                document.getElementById('logs').textContent = 'Failed to load logs';
+            }
+        }
+
+        function updateStreamingStatus(isStreaming) {
+            streamingStatus = isStreaming;
+            const indicator = document.getElementById('status-indicator');
+            const statusText = document.getElementById('status-text');
+            const startBtn = document.getElementById('start-btn');
+            const stopBtn = document.getElementById('stop-btn');
+
+            if (isStreaming) {
+                indicator.classList.add('streaming');
+                statusText.textContent = 'Streaming Active';
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+            } else {
+                indicator.classList.remove('streaming');
+                statusText.textContent = 'Ready to stream';
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+            }
+        }
+
+        // Auto-refresh status every 10 seconds
+        setInterval(refreshStatus, 10000);
+        
+        // Initial status check
+        refreshStatus();
+    </script>
+</body>
+</html>
