@@ -48,7 +48,7 @@ class WebsiteStreamer:
             chrome_options.add_argument('--disable-renderer-backgrounding')
             chrome_options.add_argument('--disable-features=TranslateUI')
             chrome_options.add_argument('--disable-ipc-flooding-protection')
-            chrome_options.add_argument('--window-size=1920,1080')
+            chrome_options.add_argument('--window-size=1280,1080')
             # chrome_options.add_argument('--window-position=-2000,-2000')  # Off-screen
             chrome_options.add_argument('--disable-web-security')
             chrome_options.add_argument('--allow-running-insecure-content')
@@ -70,7 +70,7 @@ class WebsiteStreamer:
                 # Fallback ke Firefox - JUGA HEADLESS
                 firefox_options = FirefoxOptions()
                 firefox_options.add_argument('--headless')
-                firefox_options.add_argument('--width=1920')
+                firefox_options.add_argument('--width=1280')
                 firefox_options.add_argument('--height=1080')
                 firefox_options.add_argument('--display=:99')  # Virtual display
                 
@@ -178,7 +178,7 @@ def get_website_preview(url):
             chrome_options.add_argument('--no-sandbox')
             chrome_options.add_argument('--disable-dev-shm-usage')
             chrome_options.add_argument('--disable-gpu')
-            chrome_options.add_argument('--window-size=1920,1080')
+            chrome_options.add_argument('--window-size=1280,1080')
             chrome_options.add_argument('--force-device-scale-factor=1')
             chrome_options.add_argument("--disable-gpu")
             
@@ -189,7 +189,7 @@ def get_website_preview(url):
                 # Fallback ke Firefox
                 firefox_options = FirefoxOptions()
                 firefox_options.add_argument('--headless')
-                firefox_options.add_argument('--width=1920')
+                firefox_options.add_argument('--width=1280')
                 firefox_options.add_argument('--height=1080')
                 preview_driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()),options=firefox_options)
         
