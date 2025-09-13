@@ -91,7 +91,7 @@ class WebsiteStreamer:
             # Windows menggunakan desktop capture
             ffmpeg_cmd = [
                 'ffmpeg',
-                # '-f', 'gdigrab' if os.name == "nt" else "x11grab",
+                '-f', 'gdigrab' if os.name == "nt" else "x11grab",
                 '-framerate', '30',
                 '-i', 'default',
                 '-f', 'lavfi', 
@@ -323,10 +323,15 @@ def get_logs():
     """Get FFmpeg logs for monitoring"""
     if streamer.ffmpeg_process and streaming_active:
         try:
-            logs = "FFmpeg is running...\nCheck console for detailed logs."
-            return jsonify({'logs': logs})
-        except:
-            return jsonify({'logs': 'No logs available'})
+            # Read the stderr where FFmpeg outputs its logs
+            stderr_output = streamer.ffmpeg_process.stderr
+            if stderr_output:
+                # Read up to 4KB of logs to avoid overwhelming response
+                logs = stderr_output.read1(4096).decode('utf-8', errors='replace')
+                return jsonify({'logs': logs})
+            return jsonify({'logs': 'Waiting for FFmpeg output...'})
+        except Exception as e:
+            return jsonify({'logs': f'Error reading logs: {str(e)}'})
     else:
         return jsonify({'logs': 'FFmpeg not running'})
 
